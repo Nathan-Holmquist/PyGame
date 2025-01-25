@@ -10,8 +10,11 @@ test_font = pygame.font.Font('font\\Pixeltype.ttf',50)
 ground = pygame.image.load("graphics\\ground.png").convert()
 backGround = pygame.image.load("graphics\\sky.png").convert()
 text_surface = test_font.render('My game', False, 'Green')
+
+# Indicator for collision
 color_surface = pygame.Surface((100,100))
 color_surface.fill("red")
+
 
 
 
@@ -21,13 +24,18 @@ color_surface.fill("red")
 # PLAYER CORDS
 player_x_pos = 0
 player_y_pos = 0
+player_gravity = 0
 
+hitbox_indicator = color_surface.get_rect(topright = (800,0))
 
 snail_surface = pygame.image.load("graphics\\snail\\snail1.png").convert_alpha()
 snail_hitbox = snail_surface.get_rect(bottomright = (600, 300))
 
 player_surface = pygame.image.load("graphics\\Player\\player_stand.png").convert_alpha()
-player_hitbox = player_surface.get_rect(midbottom = (80,300))
+player_hitbox = player_surface.get_rect(midbottom = (80,300 + player_gravity))
+
+score_hitbox = text_surface.get_rect(midbottom = (400, 50))
+
 
 
 
@@ -37,34 +45,40 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
+        
+        if (event.type == pygame.KEYDOWN) and (player_hitbox.bottom == 300):
+            player_gravity = -20
+            print('jump')
+
 
     
     screen.blit(backGround, (0,0))
     screen.blit(ground, (0,300))
-    screen.blit(text_surface, (300,50))
-    screen.blit(snail_surface, (snail_hitbox))
-    screen.blit(player_surface, player_hitbox)
-    screen.blit(color_surface,(200,100))
+    screen.blit(text_surface, score_hitbox)  
+    screen.blit(color_surface,hitbox_indicator)
 
 
 
-    snail_hitbox.left -= 4
+    snail_hitbox.left -= 6
     if snail_hitbox.right < 0 : snail_hitbox.left = 800
+    screen.blit(snail_surface, (snail_hitbox))
 
-    # if player_hitbox.colliderect(snail_hitbox):
-    #     color_surface.fill('green')
-    # else:
-    #     color_surface.fill('red')
+    player_gravity += 1
+    player_hitbox.y += player_gravity
+    if player_hitbox.bottom >=300: player_hitbox.bottom = 300 
+    screen.blit(player_surface, player_hitbox)
 
-    mouse_pos = pygame.mouse.get_pos()
-    print(mouse_pos)
-    mouse_pos_text = test_font.render(str(mouse_pos), False, 'Green')
-    screen.blit(mouse_pos_text, (300,100))
-    
-    if player_hitbox.collidepoint(mouse_pos):
+
+    if player_hitbox.colliderect(snail_hitbox):
         color_surface.fill('green')
+        pygame.quit()
+        exit()
     else:
         color_surface.fill('red')
+
+    
+
+
         
     clock.tick(60)
     pygame.display.update()
