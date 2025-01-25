@@ -1,1 +1,1 @@
-
+screen.blit(text_surface, score_hitbox)  
