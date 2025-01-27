@@ -1,1 +1,0 @@
-enemy_speed = ((pygame.time.get_ticks() - start_time) // 1000) 
