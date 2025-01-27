@@ -1,1 +1,1 @@
-screen.blit(text_surface, score_hitbox)  
+high_score_text = pygame.transform.scale2x(high_score_text)
