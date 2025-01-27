@@ -15,10 +15,13 @@ class Player(pygame.sprite.Sprite):
         self.image = self.player_walk[self.player_index]
         self.rect = self.image.get_rect(midbottom = (80,300))
         self.gravity = 0
+        self.jump_sound = pygame.mixer.Sound('audio\\jump.mp3')
+        self.jump_sound.set_volume(0.05)
     
     def player_input(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE] and self.rect.bottom >= 300:
+            self.jump_sound.play()
             self.gravity = -20
 
     def apply_gravity(self):
@@ -26,7 +29,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.bottom += self.gravity
         if self.rect.bottom >= 300:
             self.rect.bottom = 300
-        print(self.gravity)
 
     def animation_state(self):
         if self.rect.bottom < 300:
@@ -68,7 +70,7 @@ class Enemy(pygame.sprite.Sprite):
     
     def update(self):
         self.animation_state()
-        self.rect.x -= 6
+        self.rect.x -= enemy_speed
         self.destroy()
     
     def destroy(self):
@@ -89,7 +91,7 @@ def displayScore():
 def enemyMovement(enemy_List):
     if enemy_List:
         for enemy_rect in enemy_List:
-            enemy_rect.x -= 5
+            enemy_rect.x -= enemy_speed
             if enemy_rect.bottom == 300:
                 screen.blit(snail_surf, enemy_rect)
             else:
@@ -127,7 +129,8 @@ score = 0
 highScore = 0
 highScoreHappened = True
 start_time = 0
-score_total = 0
+total_enemies = 0
+enemy_speed = 5
 pygame.init()
 screen = pygame.display.set_mode((800,400))
 screen.fill("blue")
@@ -137,6 +140,11 @@ gameOver = True
 ground = pygame.image.load("graphics\\ground.png").convert()
 backGround = pygame.image.load("graphics\\sky.png").convert()
 
+bg_music = pygame.mixer.Sound('audio\\music.wav')
+bg_music.set_volume(0.05)
+bg_music.play(loops = -1)
+
+
 
 player_gravity = 0
 player = pygame.sprite.GroupSingle()
@@ -144,24 +152,8 @@ player.add(Player())
 
 enemy_group = pygame.sprite.Group()
 
-snail_frame_1 = pygame.image.load("graphics\\snail\\snail1.png").convert_alpha()
-snail_frame_2 = pygame.image.load("graphics\\snail\\snail2.png").convert_alpha()
-snail_frames = [snail_frame_1, snail_frame_2]
-snail_frame_index = 0
-
-snail_surf = snail_frames[snail_frame_index]
-snail_hitbox = snail_surf.get_rect(bottomright = (600, 300))
-
-fly_frame_1 = pygame.image.load("graphics\\fly\\fly1.png").convert_alpha()
-fly_frame_2 = pygame.image.load("graphics\\fly\\fly2.png").convert_alpha()
-fly_frames = [fly_frame_1,fly_frame_2] 
-fly_frame_index = 0
-
-fly_surf = fly_frames[fly_frame_index]
-fly_hitbox = fly_frames[fly_frame_index ].get_rect(bottomright = (600,250))
-
 enemy_hitbox_list = []
-
+time_tick = 0
 player_walk_1 = pygame.image.load("graphics\\Player\\player_walk_1.png").convert_alpha()
 player_walk_2 = pygame.image.load("graphics\\Player\\player_walk_2.png").convert_alpha()
 player_walk = [player_walk_1, player_walk_2]
@@ -186,7 +178,7 @@ pygame.time.set_timer(snail_animation_timer, 350)
 fly_animation_timer = pygame.USEREVENT + 3
 pygame.time.set_timer(fly_animation_timer, 200)
 
-while True:
+while True: 
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -194,9 +186,11 @@ while True:
             exit()
         
         if not gameOver: #if game is running
-
+            time_tick += 0.00001
             if (event.type == enemy_timer):
                 enemy_group.add(Enemy(choice(['fly','snail','snail'])))
+                total_enemies += 1
+
 
         else:   # if game is not running
             if (event.type == pygame.KEYDOWN) and (event.key == pygame.K_SPACE):
@@ -208,7 +202,8 @@ while True:
 
 
     if not gameOver: 
-        
+        print(enemy_speed)
+        enemy_speed += time_tick
         screen.blit(backGround, (0,0))
         screen.blit(ground, (0,300))
 
@@ -220,11 +215,6 @@ while True:
  
 
 
-        # player_gravity += 1
-        # player_hitbox.y += player_gravity
-        # if player_hitbox.bottom >=300: player_hitbox.bottom = 300 
-        # getPlayerAnimation()
-        # screen.blit(player_surf, player_hitbox)
         player.draw(screen)
         player.update()
 
