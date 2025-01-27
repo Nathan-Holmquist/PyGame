@@ -53,7 +53,9 @@ class Enemy(pygame.sprite.Sprite):
             fly_1 = pygame.image.load("graphics\\fly\\fly1.png").convert_alpha()
             fly_2 = pygame.image.load("graphics\\fly\\fly2.png").convert_alpha()
             self.frames = [fly_1,fly_2] 
-            y_pos = 210
+            if total_enemies > 10: y_pos = 170
+            else: y_pos = 210
+            
         else:
             snail_1 = pygame.image.load("graphics\\snail\\snail1.png").convert_alpha()
             snail_2 = pygame.image.load("graphics\\snail\\snail2.png").convert_alpha()
@@ -202,7 +204,6 @@ while True:
 
 
     if not gameOver: 
-        print(enemy_speed)
         enemy_speed += time_tick
         screen.blit(backGround, (0,0))
         screen.blit(ground, (0,300))
