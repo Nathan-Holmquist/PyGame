@@ -2,6 +2,7 @@
 
 import pygame
 from sys import exit
+import os
 from random import randint, choice
 
 class Player(pygame.sprite.Sprite):
@@ -120,7 +121,7 @@ def getPlayerAnimation():
         player_surf = player_walk[int(player_index)]
         # floor    
 
-
+base_path = os.path.dirname(os.path.abspath(__file__))
 score = 0
 highScore = 0
 highScoreHappened = True
@@ -191,8 +192,6 @@ while True:
                 start_time = pygame.time.get_ticks()
                 gameOver = False
                 highScoreHappened = False
-
-
 
 
     if not gameOver: 
