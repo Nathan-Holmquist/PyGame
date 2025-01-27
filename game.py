@@ -1,3 +1,5 @@
+# My best score is 84
+
 import pygame
 from sys import exit
 from random import randint, choice
@@ -14,7 +16,9 @@ class Player(pygame.sprite.Sprite):
 
         self.image = self.player_walk[self.player_index]
         self.rect = self.image.get_rect(midbottom = (80,300))
+
         self.gravity = 0
+
         self.jump_sound = pygame.mixer.Sound('audio\\jump.mp3')
         self.jump_sound.set_volume(0.05)
     
@@ -38,7 +42,7 @@ class Player(pygame.sprite.Sprite):
             self.player_index += 0.1
             if self.player_index >= len(self.player_walk):
                 self.player_index = 0
-            self.player_surf = self.player_walk[int(self.player_index)]
+            self.image = self.player_walk[int(self.player_index)]
 
     def update(self):
         self.player_input()
@@ -79,9 +83,6 @@ class Enemy(pygame.sprite.Sprite):
         if self.rect.x <= -100:
             self.kill()
 
-
-
-
 def displayScore():
     current_time = (pygame.time.get_ticks() - start_time) // 1000
     score_surf = test_font.render(f'Score:  {current_time}', False, (64,64,64))
@@ -93,19 +94,12 @@ def displayScore():
 def enemyMovement(enemy_List):
     if enemy_List:
         for enemy_rect in enemy_List:
-            enemy_rect.x -= enemy_speed
             if enemy_rect.bottom == 300:
                 screen.blit(snail_surf, enemy_rect)
             else:
                 screen.blit(fly_surf, enemy_rect)    
         enemy_List = [enemy for enemy in enemy_List if enemy.x > -100]
     return enemy_List
-
-def getCollisions(player, enemy_list):
-    if enemy_list:
-        for enemy_rect in enemy_list:
-            if player.colliderect(enemy_rect): return True
-    return False
 
 def getCollideSprites():
     if pygame.sprite.spritecollide(player.sprite, enemy_group, False):
@@ -145,8 +139,6 @@ backGround = pygame.image.load("graphics\\sky.png").convert()
 bg_music = pygame.mixer.Sound('audio\\music.wav')
 bg_music.set_volume(0.05)
 bg_music.play(loops = -1)
-
-
 
 player_gravity = 0
 player = pygame.sprite.GroupSingle()
@@ -252,6 +244,9 @@ while True:
         score_num_rect = score_num.get_rect(center = (150,225))
 
         # Opening Screen
+        
+        play_again_title = test_font.render("Press space bar to play!", True, ('lightgreen'))
+        play_again_title_rect = play_again_title.get_rect(center = (400,350))
 
         game_title = test_font.render("Super       Game", False, ('lightgreen'))
         game_title = pygame.transform.scale2x(game_title)
@@ -285,7 +280,7 @@ while True:
             screen.blit(score_num, score_num_rect)
             
             screen.blit(play_again_text, play_again_rect)
-            enemy_hitbox_list = []
+            enemy_hitbox_list.clear()
 
         else:
             screen.fill((111,196,249))
@@ -294,6 +289,7 @@ while True:
             screen.blit(title_player, title_player_hitbox)
             screen.blit(title_fly, title_fly_hitbox)
             screen.blit(title_snail, title_snail_hitbox)
+            screen.blit(play_again_title, play_again_title_rect)
  
 
         
