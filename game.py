@@ -8,19 +8,19 @@ from random import randint, choice
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        player_walk_1 = pygame.image.load("graphics\\Player\\player_walk_1.png").convert_alpha()
-        player_walk_2 = pygame.image.load("graphics\\Player\\player_walk_2.png").convert_alpha()
+        player_walk_1 = pygame.image.load("graphics/Player/player_walk_1.png").convert_alpha()
+        player_walk_2 = pygame.image.load("graphics/Player/player_walk_2.png").convert_alpha()
 
         self.player_walk = [player_walk_1, player_walk_2]
         self.player_index = 0
-        self.player_jump = pygame.image.load("graphics\\Player\\jump.png").convert_alpha()   
+        self.player_jump = pygame.image.load("graphics/Player/jump.png").convert_alpha()   
 
         self.image = self.player_walk[self.player_index]
         self.rect = self.image.get_rect(midbottom = (80,300))
 
         self.gravity = 0
 
-        self.jump_sound = pygame.mixer.Sound('audio\\jump.mp3')
+        self.jump_sound = pygame.mixer.Sound('audio/jump.mp3')
         self.jump_sound.set_volume(0.05)
     
     def player_input(self):
@@ -55,15 +55,15 @@ class Enemy(pygame.sprite.Sprite):
         super().__init__()
 
         if type == 'fly':
-            fly_1 = pygame.image.load("graphics\\fly\\fly1.png").convert_alpha()
-            fly_2 = pygame.image.load("graphics\\fly\\fly2.png").convert_alpha()
+            fly_1 = pygame.image.load("graphics/fly/fly1.png").convert_alpha()
+            fly_2 = pygame.image.load("graphics/fly/fly2.png").convert_alpha()
             self.frames = [fly_1,fly_2] 
             if total_enemies > 10: y_pos = 170
             else: y_pos = 210
             
         else:
-            snail_1 = pygame.image.load("graphics\\snail\\snail1.png").convert_alpha()
-            snail_2 = pygame.image.load("graphics\\snail\\snail2.png").convert_alpha()
+            snail_1 = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
+            snail_2 = pygame.image.load("graphics/snail/snail2.png").convert_alpha()
             self.frames = [snail_1, snail_2]
             y_pos = 300
         self.animation_index = 0
@@ -132,12 +132,12 @@ pygame.init()
 screen = pygame.display.set_mode((800,400))
 screen.fill("blue")
 clock = pygame.time.Clock()
-test_font = pygame.font.Font('font\\Pixeltype.ttf',50)
+test_font = pygame.font.Font('font/Pixeltype.ttf',50)
 gameOver = True
-ground = pygame.image.load("graphics\\ground.png").convert()
-backGround = pygame.image.load("graphics\\sky.png").convert()
+ground = pygame.image.load("graphics/ground.png").convert()
+backGround = pygame.image.load("graphics/sky.png").convert()
 
-bg_music = pygame.mixer.Sound('audio\\music.wav')
+bg_music = pygame.mixer.Sound('audio/music.wav')
 bg_music.set_volume(0.05)
 bg_music.play(loops = -1)
 
@@ -149,17 +149,17 @@ enemy_group = pygame.sprite.Group()
 
 enemy_hitbox_list = []
 time_tick = 0
-player_walk_1 = pygame.image.load("graphics\\Player\\player_walk_1.png").convert_alpha()
-player_walk_2 = pygame.image.load("graphics\\Player\\player_walk_2.png").convert_alpha()
+player_walk_1 = pygame.image.load("graphics/Player/player_walk_1.png").convert_alpha()
+player_walk_2 = pygame.image.load("graphics/Player/player_walk_2.png").convert_alpha()
 player_walk = [player_walk_1, player_walk_2]
 player_index = 0
-player_jump = pygame.image.load("graphics\\Player\\jump.png").convert_alpha()
+player_jump = pygame.image.load("graphics/Player/jump.png").convert_alpha()
 
 player_surf = player_walk[player_index]
 player_hitbox = player_surf.get_rect(midbottom = (80,300 + player_gravity))
 
 # Intro Screen
-player_stand = pygame.image.load('graphics\Player\player_stand.png').convert_alpha()
+player_stand = pygame.image.load('graphics/Player/player_stand.png').convert_alpha()
 player_stand = pygame.transform.scale2x(player_stand)
 player_stand_hitbox = player_stand.get_rect(center = (400,200))
 
@@ -191,11 +191,14 @@ while True:
             if (event.type == pygame.KEYDOWN) and (event.key == pygame.K_SPACE):
                 start_time = pygame.time.get_ticks()
                 gameOver = False
+                enemy_speed = 5
+                time_tick = 0
                 highScoreHappened = False
 
 
     if not gameOver: 
         enemy_speed += time_tick
+        print(enemy_speed)
         screen.blit(backGround, (0,0))
         screen.blit(ground, (0,300))
 
@@ -254,15 +257,15 @@ while True:
         game_dev = test_font.render("By: Nathan   Holmquist", False, ('lightgreen'))
         game_dev_hitbox = game_dev.get_rect(center = (400,300))
 
-        title_player = pygame.image.load('graphics\\Player\\jump.png').convert_alpha()
+        title_player = pygame.image.load('graphics/Player/jump.png').convert_alpha()
         title_player = pygame.transform.scale2x(title_player)
         title_player_hitbox = title_player.get_rect(center = (400,200))
 
-        title_fly = pygame.image.load('graphics\\Fly\\fly1.png').convert_alpha()
+        title_fly = pygame.image.load('graphics/Fly/fly1.png').convert_alpha()
         title_fly = pygame.transform.scale2x(title_fly)
         title_fly_hitbox = title_fly.get_rect(center = (200,200))
 
-        title_snail = pygame.image.load('graphics\\Snail\\snail1.png').convert_alpha()
+        title_snail = pygame.image.load('graphics/Snail/snail1.png').convert_alpha()
         title_snail = pygame.transform.scale2x(title_snail)
         title_snail_hitbox = title_snail.get_rect(center = (600,200))
 
