@@ -1,4 +1,5 @@
-# My best score is 84
+# My best score is 104
+# Best score ever Francis - 107
 
 import pygame
 from sys import exit
@@ -172,6 +173,7 @@ pygame.time.set_timer(snail_animation_timer, 350)
 
 fly_animation_timer = pygame.USEREVENT + 3
 pygame.time.set_timer(fly_animation_timer, 200)
+    
 
 while True: 
     
