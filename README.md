@@ -12,10 +12,12 @@ Clone the repository and just hit run on the python file, the game should run ea
 ## What is the high score of your game? 
 I need to change the game logic because it doesn't increase in dificulty the way I want it to but the current top placements are
 
-1. Francis - 110
+1. Francis - 107
 
-2. Me - 108
+2. Me - 104
 
 If you end up getting a better score than this, message me, and I will place your name on the leaderboard, just send a ss of your high score
 
 ## Have Fun!
+
+edit: The codebase is kind of bad, this wasn't planned out ahead of time so I kind of went with the flow of things. I understand it, but I don't know if someone reading it would. Sorry in advance and realize that this was just made for educational purposes.
