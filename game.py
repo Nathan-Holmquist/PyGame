@@ -123,10 +123,23 @@ def getPlayerAnimation():
         player_surf = player_walk[int(player_index)]
         # floor    
 
+def getTitlePlayerAnimation(): # Returns the string for the gameOver player walk file and switches it every time its called
+    player_walk_1 = "graphics/Player/player_walk_1.png"
+    player_walk_2 = "graphics/Player/player_walk_2.png"
+
+    player_animations = [player_walk_1, player_walk_2]
+
+    global index
+
+    index += 0.1
+    if index >= 2: index = 0
+    return player_animations[int(index)]  # Returns the string of the image path based on the index
 
 
 
-base_path = os.path.dirname(os.path.abspath(__file__))
+
+index = 0
+base_path = os.path.dirname(os.path.abspath(__file__)) 
 score = 0
 highScore = 0
 highScoreHappened = True
@@ -260,7 +273,17 @@ while True:
 
         high_score_text = test_font.render("High Score!", False, (64,64,64))
         # high_score_text = pygame.transform.scale2x(high_score_text)
-        high_score_rect = high_score_text.get_rect(center = (150,150))
+        high_score_rect = high_score_text.get_rect(center = (650,150))
+
+        new_high_score_text_1 = test_font.render("Congrats!", False, (64))
+        new_high_score_rect_1 = new_high_score_text_1.get_rect(center = (650,150))
+
+        new_high_score_text_2 = test_font.render("New High Score", False, (64))
+        new_high_score_rect_2 = new_high_score_text_2.get_rect(center = (650,175))
+
+        high_score_num = score_num = test_font.render(f'{highScore}', False, (0,0,0))
+        high_score_num = pygame.transform.scale2x(high_score_num)
+        high_score_num_rect = high_score_num.get_rect(center = (650,225))
 
         score_num = test_font.render(f'{score}', False, (0,0,0))
         score_num = pygame.transform.scale2x(score_num)
@@ -278,7 +301,10 @@ while True:
         game_dev = test_font.render("By: Nathan   Holmquist", False, ('lightgreen'))
         game_dev_hitbox = game_dev.get_rect(center = (400,300))
 
-        title_player = pygame.image.load('graphics/Player/jump.png').convert_alpha()
+
+        title_player = pygame.image.load(getTitlePlayerAnimation()).convert_alpha()
+
+
         title_player = pygame.transform.scale2x(title_player)
         title_player_hitbox = title_player.get_rect(center = (400,200))
 
@@ -294,10 +320,16 @@ while True:
         if score != 0:
             screen.fill('red')
             screen.blit(player_stand,player_stand_hitbox)
+            
             if highScoreHappened:
-                screen.blit(high_score_text, high_score_rect)
+                screen.blit(new_high_score_text_1,new_high_score_rect_1)
+                screen.blit(new_high_score_text_2,new_high_score_rect_2)
             else:
-                screen.blit(score_text, score_rect)
+                screen.blit(high_score_text, high_score_rect)
+
+            screen.blit(score_text, score_rect)
+            
+            screen.blit(high_score_num, high_score_num_rect) 
             
             screen.blit(game_over_text,game_over_rect)
             screen.blit(score_num, score_num_rect)
