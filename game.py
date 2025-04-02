@@ -6,6 +6,7 @@ from sys import exit
 import os
 from random import randint, choice
 
+
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -122,6 +123,9 @@ def getPlayerAnimation():
         player_surf = player_walk[int(player_index)]
         # floor    
 
+
+
+
 base_path = os.path.dirname(os.path.abspath(__file__))
 score = 0
 highScore = 0
@@ -149,7 +153,10 @@ player.add(Player())
 enemy_group = pygame.sprite.Group()
 
 enemy_hitbox_list = []
-time_tick = 0
+time_tick = 0 # Used to increase enemy speed 
+firstEnemy = True # True if this is the first enemy in the game
+
+
 player_walk_1 = pygame.image.load("graphics/Player/player_walk_1.png").convert_alpha()
 player_walk_2 = pygame.image.load("graphics/Player/player_walk_2.png").convert_alpha()
 player_walk = [player_walk_1, player_walk_2]
@@ -164,15 +171,7 @@ player_stand = pygame.image.load('graphics/Player/player_stand.png').convert_alp
 player_stand = pygame.transform.scale2x(player_stand)
 player_stand_hitbox = player_stand.get_rect(center = (400,200))
 
-# Timer's
-enemy_timer = pygame.USEREVENT + 1
-pygame.time.set_timer(enemy_timer, 1500)
 
-snail_animation_timer = pygame.USEREVENT + 2
-pygame.time.set_timer(snail_animation_timer, 350)
-
-fly_animation_timer = pygame.USEREVENT + 3
-pygame.time.set_timer(fly_animation_timer, 200)
     
 
 while True: 
@@ -183,7 +182,8 @@ while True:
             exit()
         
         if not gameOver: #if game is running
-            time_tick += 0.00001
+            time_tick += 0.00001 # Only used to increase enemy speed
+
             if (event.type == enemy_timer):
                 enemy_group.add(Enemy(choice(['fly','snail','snail'])))
                 total_enemies += 1
@@ -196,11 +196,28 @@ while True:
                 enemy_speed = 5
                 time_tick = 0
                 highScoreHappened = False
+                total_enemies = 0
+
+                # Timer's
+                enemy_timer = pygame.USEREVENT + 1
+                pygame.time.set_timer(enemy_timer, 1500)
+
+                snail_animation_timer = pygame.USEREVENT + 2
+                pygame.time.set_timer(snail_animation_timer, 350)
+
+                fly_animation_timer = pygame.USEREVENT + 3
+                pygame.time.set_timer(fly_animation_timer, 200)
+
+                # If the user starts a new game, an enemy should spawn instantly
+                enemy_group.add(Enemy(choice(['fly','snail','snail'])))
+                total_enemies += 1
+
+
 
 
     if not gameOver: 
         enemy_speed += time_tick
-        print(enemy_speed)
+
         screen.blit(backGround, (0,0))
         screen.blit(ground, (0,300))
 
@@ -228,6 +245,8 @@ while True:
     else: 
         
         # Game Over
+        firstEnemy = True
+
         game_over_text = test_font.render("Game    Over", False, (64,64,64))
         game_over_text = pygame.transform.scale2x(game_over_text)
         game_over_rect = game_over_text.get_rect(center = (400,50))
